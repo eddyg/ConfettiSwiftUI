@@ -51,7 +51,7 @@ public enum ConfettiType:CaseIterable, Hashable {
 @available(iOS 14.0, macOS 11.0, watchOS 7, tvOS 14.0, *)
 public struct ConfettiCannon<T: Equatable>: View {
     @Binding var trigger: T
-    @StateObject private var confettiConfig:ConfettiConfig
+    @ObservedObject private var confettiConfig:ConfettiConfig
 
     @State var animate:[Bool] = []
     @State var finishedAnimationCounter = 0
@@ -105,7 +105,7 @@ public struct ConfettiCannon<T: Equatable>: View {
             }
         }
     
-        _confettiConfig = StateObject(wrappedValue: ConfettiConfig(
+        _confettiConfig = ObservedObject(wrappedValue: ConfettiConfig(
             num: num,
             shapes: shapes,
             colors: colors,
