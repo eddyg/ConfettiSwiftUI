@@ -20,10 +20,14 @@ public enum ConfettiType:CaseIterable, Hashable {
     case shape(Shape)
     case text(String)
     case sfSymbol(symbolName: String)
+    /// Loads a custom symbol asset from the host app's asset catalog.
+    case assetSymbol(symbolName: String)
     case image(String)
     
     public var view:AnyView{
         switch self {
+        case .shape(.circle):
+            return AnyView(Circle())
         case .shape(.square):
             return AnyView(Rectangle())
         case .shape(.triangle):
@@ -36,10 +40,27 @@ public enum ConfettiType:CaseIterable, Hashable {
             return AnyView(Text(text))
         case .sfSymbol(let symbolName):
             return AnyView(Image(systemName: symbolName))
+        case .assetSymbol(let symbolName):
+            return AnyView(Image(symbolName))
         case .image(let image):
             return AnyView(Image(image).resizable())
-        default:
-            return AnyView(Circle())
+        }
+    }
+
+    func styledView(color: Color, confettiSize: CGFloat) -> AnyView {
+        switch self {
+        case .shape:
+            return AnyView(
+                view
+                    .foregroundColor(color)
+                    .frame(width: confettiSize, height: confettiSize, alignment: .center)
+            )
+        case .image:
+            return AnyView(view.frame(maxWidth: confettiSize, maxHeight: confettiSize))
+        case .text, .sfSymbol, .assetSymbol:
+            // Asset-catalog symbol images should stay on the symbol styling path so
+            // they respond to the same font and tint configuration as system symbols.
+            return AnyView(view.foregroundColor(color).font(.system(size: confettiSize)))
         }
     }
     
@@ -94,14 +115,7 @@ public struct ConfettiCannon<T: Equatable>: View {
         
         for confetti in confettis{
             for color in colors{
-                switch confetti {
-                case .shape(_):
-                    shapes.append(AnyView(confetti.view.foregroundColor(color).frame(width: confettiSize, height: confettiSize, alignment: .center)))
-                case .image(_):
-                    shapes.append(AnyView(confetti.view.frame(maxWidth:confettiSize, maxHeight: confettiSize)))
-                default:
-                    shapes.append(AnyView(confetti.view.foregroundColor(color).font(.system(size: confettiSize))))
-                }
+                shapes.append(confetti.styledView(color: color, confettiSize: confettiSize))
             }
         }
     

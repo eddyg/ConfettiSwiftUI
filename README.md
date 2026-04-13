@@ -169,6 +169,24 @@ You can use the configurator app in [demo project here](https://github.com/simib
 .confettiCannon(trigger: $trigger8, confettis: [.image("arb"), .image("eth"), .image("btc"), .image("op"), .image("link"), .image("doge")], confettiSize: 20)
 ```
 
+#### Custom Symbol Assets
+
+Use `.assetSymbol(symbolName:)` for symbol images that live in your app's asset
+catalog when you want them to pick up the same `foregroundColor` and
+`confettiSize` styling as `.sfSymbol`.
+
+```swift
+.confettiCannon(
+    trigger: $trigger,
+    confettis: [
+        .assetSymbol(symbolName: "custom.badge"),
+        .assetSymbol(symbolName: "custom.badge.fill")
+    ],
+    colors: [.blue, .cyan],
+    confettiSize: 20
+)
+```
+
 ## 👨‍💻 Contributors
 
 All issue reports, feature requests, pull requests and GitHub stars are welcomed and much appreciated.

@@ -4,16 +4,25 @@ import XCTest
 import SwiftUI
 
 final class ConfettiSwiftUITests: XCTestCase {
-    @State var trigger = false
+    @State private var trigger = false
 
-    func testExample() {
-        ConfettiSwiftUI.ConfettiCannon(trigger: $trigger)
-        Button("Animation"){
+    func testConfettiCannonSupportsAllContentKinds() {
+        _ = ConfettiSwiftUI.ConfettiCannon(
+            trigger: $trigger,
+            confettis: [
+                .shape(.circle),
+                .text("🎉"),
+                .sfSymbol(symbolName: "star.fill"),
+                .assetSymbol(symbolName: "custom.symbol"),
+                .image("custom-image")
+            ]
+        )
+        _ = Button("Animation") {
             self.trigger.toggle()
         }
     }
 
     static var allTests = [
-        ("testExample", testExample),
+        ("testConfettiCannonSupportsAllContentKinds", testConfettiCannonSupportsAllContentKinds),
     ]
 }
